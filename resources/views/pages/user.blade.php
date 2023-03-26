@@ -185,7 +185,7 @@
                         <select class="form-control pt-1" name="role" style="font-size: 15px;">
                             <option disabled selected>-- Select User Role --</option>
                             @foreach ($roles as $role)
-                            <option value="{{$role->id}}">{{$role->name}}</option>
+                            <option value="{{$role->name}}">{{$role->name}}</option>
                             @endforeach
                         </select>
                     </div>

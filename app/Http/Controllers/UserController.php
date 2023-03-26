@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -13,7 +15,7 @@ class UserController extends Controller
     public function index()
     {
         $users = User::get();
-        $roles = [];
+        $roles = Role::get();
         return view('pages.user', [
             'users' => $users,
             'editUser' => null,
@@ -29,9 +31,11 @@ class UserController extends Controller
     {
         $data = [
             'name' => $request->input('name'),
-            // TODO:: onek kaaj korte hobe eikhane
+            'email' => $request->input('email'),
+            'password' => Hash::make($request->input('password')),
         ];
-        User::create($data);
+        $user = User::create($data);
+        $user->assignRole($request->input('role'));
         return redirect(url('/users'))->with('success', 'User Added Successfully!');
     }
 
