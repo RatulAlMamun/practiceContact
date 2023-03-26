@@ -137,37 +137,6 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="data-controller-wrap">
-                                <div class="bulk-action-wrapper">
-                                    <select class="bulk-action custom-select custom-select-sm" id="bulk_action">
-                                        <option value=""></option>
-                                        <option value="delete">Delete Selected</option>
-                                        <option value="active">Active</option>
-                                        <option value="inactive">Inactive</option>
-                                    </select>
-                                    <button class="bulk-action-btn" id="bulk_action_btn">Apply</button>
-                                </div>
-                                <div class="item-per-page">
-                                    <div class="item-per-page-toggle">
-                                        <label>Per Page </label>
-                                        <input type="number" id="ippIn" min="1"><span></span>
-                                    </div>
-                                    <ul id="ippList">
-                                        <li>22</li>
-                                        <li>50</li>
-                                        <li>100</li>
-                                        <li>500</li>
-                                        <li>1000</li>
-                                        <li>5000</li>
-                                    </ul>
-                                </div>
-                                <div class="pagination-wrap pagination">
-                                    <a href="" class="active" onclick="">1</a>
-                                    <a href="" class="" onclick="">2</a>
-                                    <a href="" class="" onclick="">Next »</a>
-                                    <a href="" onclick="">Last</a>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -177,19 +146,51 @@
 </div>
 
 
-<!-- ADD User POP UP DESIGN -->
+<!-- ADD USER POP UP DESIGN -->
 <div class="popup-wrap" id="myUserForm" style="display: none;">
     <div class="popup-body " style="width:550px"><span class="closePopup" onclick="closeUserForm()"></span>
         <div class="popup-inner">
             <form class="ajx" method="POST" action="{{route('users.store')}}">
                 @csrf
                 <div class="formItem">
-                    <label class="mr-2">Category Name</label>
+                    <label class="mr-2">Name</label>
                     <div class="fieldArea">
-                        <input type="text" name="name" value="" class="form-control" placeholder="Category Name" required>
+                        <input type="text" name="name" class="form-control" placeholder="User Name" required>
                     </div>
                 </div>
                 @error('name')
+                <p class="alert alert-danger">{{ $message }}</p>
+                @enderror
+                <div class="formItem">
+                    <label class="mr-2">Email</label>
+                    <div class="fieldArea">
+                        <input type="text" name="email" class="form-control" placeholder="User Email" required>
+                    </div>
+                </div>
+                @error('email')
+                <p class="alert alert-danger">{{ $message }}</p>
+                @enderror
+                <div class="formItem">
+                    <label class="mr-2">Password</label>
+                    <div class="fieldArea">
+                        <input type="text" name="password" class="form-control" placeholder="User Password" required>
+                    </div>
+                </div>
+                @error('password')
+                <p class="alert alert-danger">{{ $message }}</p>
+                @enderror
+                <div class="formItem">
+                    <label class="mr-2">Role</label>
+                    <div class="fieldArea">
+                        <select class="form-control pt-1" name="role" style="font-size: 15px;">
+                            <option disabled selected>-- Select User Role --</option>
+                            @foreach ($roles as $role)
+                            <option value="{{$role->id}}">{{$role->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                @error('role')
                 <p class="alert alert-danger">{{ $message }}</p>
                 @enderror
 

@@ -13,10 +13,12 @@ class UserController extends Controller
     public function index()
     {
         $users = User::get();
+        $roles = [];
         return view('pages.user', [
             'users' => $users,
             'editUser' => null,
             'edit' => false,
+            'roles' => $roles,
         ]);
     }
 
