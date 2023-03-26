@@ -34,7 +34,7 @@ Route::middleware('auth')->group(function(){
     Route::get('/category/edit/{id}', [CategoryController::class, 'edit'])->name('category.edit');
     Route::post('/category/update/{id}', [CategoryController::class, 'update'])->name('category.update');
 
-    Route::prefix('users')->group(function () {
+    Route::prefix('users')->middleware('role:admin|manager')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('users');
         Route::post('store', [UserController::class, 'store'])->name('users.store');
         Route::get('edit/{id}', [UserController::class, 'edit'])->name('users.edit');
