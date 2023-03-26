@@ -40,6 +40,7 @@
             </a>
           </li>
           <hr style="border-bottom: 1px solid #000;margin: 5px 0;">
+          @if (auth()->user()->hasRole('admin'))
           <li class="{{ (strcmp(Route::currentRouteName(), 'users') == 0) ? 'active' : '' }}">
             <a href="{{route('users')}}">
               <span class="menu_ic">
@@ -49,6 +50,7 @@
             </a>
           </li>
           <hr style="border-bottom: 1px solid #000;margin: 5px 0;">
+          @endif
         </ul>
       </div>
     </div>
