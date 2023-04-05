@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BulkActionRequest;
 use App\Http\Requests\StoreContactRequest;
 use App\Http\Requests\UpdateContactRequest;
 use App\Models\Category;
@@ -91,8 +92,7 @@ class ContactController extends Controller
                 'status' => false
             ]);
             return redirect(url('/'))->with('deletesuccess', 'Contact Inactive Successfully!');
-        }
-        else {
+        } else {
             Email::where('id', $id)->update([
                 'status' => true
             ]);
@@ -100,7 +100,7 @@ class ContactController extends Controller
         }
         // return redirect(url('/'))->with('deletesuccess', 'Contact Deleted Successfully!');
     }
-    
+
     public function search(Request $request)
     {
         $emails = Email::where('email', 'LIKE', "$request->search")
@@ -111,21 +111,13 @@ class ContactController extends Controller
         $categories = Category::get();
         return view('pages.contact', ['emails' => $emails, 'categories' => $categories, 'editContactEmailWise' => null, 'edit' => false]);
     }
-    
-    public function bulkaction(Request $request)
+
+    public function bulkaction(BulkActionRequest $request)
     {
-        dd($request->all());
-        // if($request->action == 'active')
-        // {
-        //     dd('active');
-        // }
-        // else if($request->action == 'inactive')
-        // {
-        //     dd('inactive');
-        // }
-        // else
-        // {
-        //     dd('null');
-        // }
+        Email::whereIn('id', $request->input('emailIds'))->update([
+            'status' => $request->input('action') == 'active' ? true : false
+        ]);
+        $msg = $request->input('action') == 'active' ? 'Contacts Active Successfully!' : 'Contacts Inactive Successfully!';
+        return redirect(url('/'))->with('deletesuccess', $msg);
     }
 }
