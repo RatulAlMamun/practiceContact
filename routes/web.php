@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -27,6 +28,7 @@ Route::middleware('auth')->group(function(){
     Route::post('/contact/update/{id}', [ContactController::class, 'update'])->name('contact.update');
     Route::get('/contact/inactive/{id}', [ContactController::class, 'inactive'])->name('contact.inactive');
     Route::get('/contact/search', [ContactController::class, 'search'])->name('contact.search');
+    Route::post('/contact/bulkaction', [ContactController::class, 'bulkaction'])->name('contact.bulkaction');
 
 
     Route::get('/categories', [CategoryController::class, 'show'])->name('categories');
@@ -34,11 +36,11 @@ Route::middleware('auth')->group(function(){
     Route::get('/category/edit/{id}', [CategoryController::class, 'edit'])->name('category.edit');
     Route::post('/category/update/{id}', [CategoryController::class, 'update'])->name('category.update');
 
-    Route::prefix('users')->middleware('role:admin|manager')->group(function () {
+    Route::prefix('users')->middleware('role:admin')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('users');
-        Route::post('store', [UserController::class, 'store'])->name('users.store');
-        Route::get('edit/{id}', [UserController::class, 'edit'])->name('users.edit');
-        Route::post('update/{id}', [UserController::class, 'update'])->name('users.update');
+        Route::post('store', [UserController::class, 'store'])->name('user.store');
+        Route::get('edit/{id}', [UserController::class, 'edit'])->name('user.edit');
+        Route::post('update/{id}', [UserController::class, 'update'])->name('user.update');
     });
 });
 

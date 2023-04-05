@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
-use Spatie\Permission\Models\Role;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -17,22 +19,22 @@ class UserController extends Controller
         $users = User::get();
         $roles = Role::get();
         return view('pages.user', [
-            'users' => $users,
-            'editUser' => null,
+            'users' => $users, 
+            'editUser' => null, 
             'edit' => false,
-            'roles' => $roles,
+            'roles' => $roles
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
         $data = [
             'name' => $request->input('name'),
             'email' => $request->input('email'),
-            'password' => Hash::make($request->input('password')),
+            'password' => Hash::make($request->input('password'))
         ];
         $user = User::create($data);
         $user->assignRole($request->input('role'));
@@ -42,25 +44,34 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id)
+    public function edit(string $id)
     {
         $users = User::get();
-        $editUser = User::find($id);
+        $editUser = User::with('roles')->find($id);
+        $roles = Role::get();
         return view('pages.user', [
-            'users' => $users,
-            'editUser' => $editUser,
+            'users' => $users, 
+            'editUser' => $editUser, 
             'edit' => true,
+            'roles' => $roles
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateUserRequest $request, $id)
     {
-        User::where('id', $id)->update([
-            'name' => $request->name
-        ]);
-        return redirect(url('/users'))->with('editsuccess', 'User Updated Successfully!');
+        $user = User::find($id);
+        if ($user) {
+            $data = [
+                'name' => $request->input('name'),
+                'email' => $request->input('email')
+            ];
+            $user->update($data);
+            $user->syncRoles($request->input('role'));
+            return redirect(url('/users'))->with('editsuccess', 'User Updated Successfully!');
+        }
+        return redirect(url('/users'))->with('editsuccess', 'User Not found!');
     }
 }

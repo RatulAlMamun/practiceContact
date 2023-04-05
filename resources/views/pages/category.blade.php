@@ -78,7 +78,7 @@
         {{ session('success') }}
     </div>
     @endif
-    
+
     @if (session('editsuccess'))
     <div class="alert alert-success alert-dismissible mb-0" role="alert">
         <button type="button" class="close" data-dismiss="alert">×</button>
@@ -96,15 +96,12 @@
             <div class="row">
                 <div class="col-lg-12 ">
                     <div id="datalist">
+                        @if (count($categories) > 0)
                         <div class="data-wraper">
                             <div class="data-wrap">
                                 <table class="databuilder-table table table-bordered table-striped info_table table-contact">
                                     <thead>
                                         <tr>
-                                            <th class="bulk-action-th" width="2%">
-                                                <input value="" type="checkbox" id="allSelect" class="styled-checkbox">
-                                                <label class="checkbox-custom-label" for="allSelect"></label>
-                                            </th>
                                             <th class="col-company" width="10%">
                                                 <div class="table-header-item">
                                                     <div class="headItem">#</div>
@@ -125,56 +122,26 @@
                                     </thead>
                                     <tbody id="dataTableBody">
                                         @foreach ($categories as $key => $category)
-                                            <tr class="data-row-item">
-                                                <td class="bulk-action-td" width="2%">
-                                                    <input value="1" type="checkbox" class="styled-checkbox data-check" id="dataCheck10">
-                                                    <label class="checkbox-custom-label" for="dataCheck10"></label>
-                                                </td>
-                                                <td class="col-company">{{$key + 1}}</td>
-                                                <td class="col-company">{{$category->name}}</td>
-                                                <td class="col-name"><span title="Contact Lists : ">{{$category->user->name}}</span></td>
-                                                <td>
-                                                    <div class="data-action">
-                                                        <a data-w="750" href="{{route('category.edit', ['id' => $category->id])}}" class="action-edit popup"><i class="mailer-icon edit" style="width: 20px;"></i></a>
-                                                    </div>
-                                                </td>
-                                            </tr>
+                                        <tr class="data-row-item">
+                                            <td>{{$key + 1}}</td>
+                                            <td>{{$category->name}}</td>
+                                            <td>{{$category->user->name}}</td>
+                                            <td>
+                                                <div class="data-action">
+                                                    <a data-w="750" href="{{route('category.edit', ['id' => $category->id])}}" class="action-edit popup"><i class="mailer-icon edit" style="width: 20px;"></i></a>
+                                                </div>
+                                            </td>
+                                        </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="data-controller-wrap">
-                                <div class="bulk-action-wrapper">
-                                    <select class="bulk-action custom-select custom-select-sm" id="bulk_action">
-                                        <option value=""></option>
-                                        <option value="delete">Delete Selected</option>
-                                        <option value="active">Active</option>
-                                        <option value="inactive">Inactive</option>
-                                    </select>
-                                    <button class="bulk-action-btn" id="bulk_action_btn">Apply</button>
-                                </div>
-                                <div class="item-per-page">
-                                    <div class="item-per-page-toggle">
-                                        <label>Per Page </label>
-                                        <input type="number" id="ippIn" min="1"><span></span>
-                                    </div>
-                                    <ul id="ippList">
-                                        <li>22</li>
-                                        <li>50</li>
-                                        <li>100</li>
-                                        <li>500</li>
-                                        <li>1000</li>
-                                        <li>5000</li>
-                                    </ul>
-                                </div>
-                                <div class="pagination-wrap pagination">
-                                    <a href="" class="active" onclick="">1</a>
-                                    <a href="" class="" onclick="">2</a>
-                                    <a href="" class="" onclick="">Next »</a>
-                                    <a href="" onclick="">Last</a>
-                                </div>
-                            </div>
                         </div>
+                        @else
+                        <div class="alert alert-primary" role="alert">
+                            <h4 class="alert-heading">Category Not Found!!</h4>
+                        </div>
+                        @endif
                     </div>
                 </div>
             </div>

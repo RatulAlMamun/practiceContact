@@ -23,7 +23,7 @@ class StoreContactRequest extends FormRequest
     {
         preg_match_all('/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/', $this->emails, $matches);
         $this->merge([
-            'emails' => empty($matches[0]) ? null : $matches[0],
+            'emails' => empty($matches[0]) ? null : array_unique($matches[0]),
         ]);
         // dd($this->emails);
         return [
@@ -37,7 +37,7 @@ class StoreContactRequest extends FormRequest
             'company' => 'string|nullable',
             'category' => 'required|numeric|nullable',
             'country' => 'string|nullable',
-            'address' => 'string|nullable'
+            'address' => 'nullable|max:250|string'
         ];
     }
 

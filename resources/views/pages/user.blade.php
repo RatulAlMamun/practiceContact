@@ -6,7 +6,7 @@
     <div class="module-header">
         <h2 class="currentModule">
             <div class="page-icon"><i class="mailer-icon"></i></div>
-            User
+            Users
             <a href="#" class="popup btn btn_a" data-w="750" onclick="openUserForm()">
                 <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
                     <title>Add User</title>
@@ -85,6 +85,12 @@
         {{ session('editsuccess') }}
     </div>
     @endif
+    @error('name')
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" style="font-size: 30px;">×</button>
+        <p>{{ $message }}</p>
+    </div>
+    @enderror
     <div id="page-content-wrapper">
         <div class="container-fluid xyz">
             <div class="row">
@@ -95,21 +101,22 @@
                                 <table class="databuilder-table table table-bordered table-striped info_table table-contact">
                                     <thead>
                                         <tr>
-                                            <th class="bulk-action-th" width="2%">
-                                                <input value="" type="checkbox" id="allSelect" class="styled-checkbox">
-                                                <label class="checkbox-custom-label" for="allSelect"></label>
-                                            </th>
                                             <th class="col-company" width="10%">
                                                 <div class="table-header-item">
                                                     <div class="headItem">#</div>
                                                 </div>
                                             </th>
-                                            <th class="col-company" width="40%">
+                                            <th class="col-company" width="30%">
                                                 <div class="table-header-item">
                                                     <div class="headItem">User Name</div>
                                                 </div>
                                             </th>
-                                            <th class="col-name" width="40%">
+                                            <th class="col-company" width="30%">
+                                                <div class="table-header-item">
+                                                    <div class="headItem">User Email</div>
+                                                </div>
+                                            </th>
+                                            <th class="col-name" width="30%">
                                                 <div class="table-header-item">
                                                     <div class="headItem">Role</div>
                                                 </div>
@@ -119,20 +126,17 @@
                                     </thead>
                                     <tbody id="dataTableBody">
                                         @foreach ($users as $key => $user)
-                                            <tr class="data-row-item">
-                                                <td class="bulk-action-td" width="2%">
-                                                    <input value="1" type="checkbox" class="styled-checkbox data-check" id="dataCheck10">
-                                                    <label class="checkbox-custom-label" for="dataCheck10"></label>
-                                                </td>
-                                                <td class="col-company">{{$key + 1}}</td>
-                                                <td class="col-company">{{$user->name}}</td>
-                                                <td class="col-name"><span title="Contact Lists : ">User</span></td>
-                                                <td>
-                                                    <div class="data-action">
-                                                        <a data-w="750" href="{{route('users.edit', ['id' => $user->id])}}" class="action-edit popup"><i class="mailer-icon edit" style="width: 20px;"></i></a>
-                                                    </div>
-                                                </td>
-                                            </tr>
+                                        <tr class="data-row-item">
+                                            <td>{{$key + 1}}</td>
+                                            <td>{{$user->name}}</td>
+                                            <td>{{$user->email}}</td>
+                                            <td>{{$user->roles->pluck('name')->first()}}</td>
+                                            <td>
+                                                <div class="data-action">
+                                                    <a data-w="750" href="{{route('user.edit', ['id' => $user->id])}}" class="action-edit popup"><i class="mailer-icon edit" style="width: 20px;"></i></a>
+                                                </div>
+                                            </td>
+                                        </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
@@ -150,12 +154,12 @@
 <div class="popup-wrap" id="myUserForm" style="display: none;">
     <div class="popup-body " style="width:550px"><span class="closePopup" onclick="closeUserForm()"></span>
         <div class="popup-inner">
-            <form class="ajx" method="POST" action="{{route('users.store')}}">
+            <form class="ajx" method="POST" action="{{route('user.store')}}">
                 @csrf
                 <div class="formItem">
                     <label class="mr-2">Name</label>
                     <div class="fieldArea">
-                        <input type="text" name="name" class="form-control" placeholder="User Name" required>
+                        <input type="text" name="name" value="" class="form-control" placeholder="User Name" required>
                     </div>
                 </div>
                 @error('name')
@@ -193,7 +197,6 @@
                 @error('role')
                 <p class="alert alert-danger">{{ $message }}</p>
                 @enderror
-
                 <div class="formItem">
                     <label class="mr-5"></label>
                     <button type="submit" class="btn btn-primary mailer-primary-btn mt-3">Save</button>
@@ -203,27 +206,50 @@
     </div>
 </div>
 
-<!-- Edit CATEGORY POP UP DESIGN -->
-@if(isset($editCategory))
+<!-- Edit USER POP UP DESIGN -->
+@if(isset($editUser))
 <div class="popup-wrap" id="editform" style="display: @if ($edit)
     block
 @else
     none
 @endif">
-    <div class="popup-body " style="width:550px"><a href="{{route('categories')}}" class="closePopup"></a>
+    <div class="popup-body " style="width:550px"><a href="{{route('users')}}" class="closePopup"></a>
         <div class="popup-inner">
-            <form class="ajx" method="POST" action="{{route('category.update', ['id' => $editCategory->id])}}">
+            <form class="ajx" method="POST" action="{{route('user.update', ['id' => $editUser->id])}}">
                 @csrf
                 <div class="formItem">
-                    <label class="mr-2">Category Name</label>
+                    <label class="mr-2">Name</label>
                     <div class="fieldArea">
-                        <input type="text" name="name" value="{{ $editCategory->name }}" class="form-control" placeholder="Category Name" required>
+                        <input type="text" name="name" value="{{ $editUser->name }}" class="form-control" placeholder="User Name" required>
                     </div>
                 </div>
                 @error('name')
                 <p class="alert alert-danger">{{ $message }}</p>
                 @enderror
+                <div class="formItem">
+                    <label class="mr-2">Email</label>
+                    <div class="fieldArea">
+                        <input type="text" name="email" value="{{ $editUser->email }}" class="form-control" placeholder="User Email" required>
+                    </div>
+                </div>
+                @error('email')
+                <p class="alert alert-danger">{{ $message }}</p>
+                @enderror
 
+                <div class="formItem">
+                    <label class="mr-2">Role</label>
+                    <div class="fieldArea">
+                        <select class="form-control pt-1" name="role" style="font-size: 15px;">
+                            <option disabled selected>-- Select User Role --</option>
+                            @foreach ($roles as $role)
+                            <option value="{{$role->name}}" @if ($editUser->roles[0]->name == $role->name) selected @endif>{{$role->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                @error('role')
+                <p class="alert alert-danger">{{ $message }}</p>
+                @enderror
                 <div class="formItem">
                     <label class="mr-5"></label>
                     <button type="submit" class="btn btn-primary mailer-primary-btn mt-3">Update</button>
@@ -236,12 +262,12 @@
 
 
 <script>
-    // category popup open
+    // user popup open
     function openUserForm() {
         document.getElementById("myUserForm").style.display = "block";
     }
 
-    // category popup close
+    // user popup close
     function closeUserForm() {
         document.getElementById("myUserForm").style.display = "none";
     }
