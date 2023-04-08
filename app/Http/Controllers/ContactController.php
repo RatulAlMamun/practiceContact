@@ -28,7 +28,7 @@ class ContactController extends Controller
 
     public function store(StoreContactRequest $request)
     {
-        $emails = $request->emails;
+        $emails = $request->input('uniqueEmails');
         $data = [
             'name' => $request->input('name'),
             'mobile' => $request->input('mobile'),
@@ -47,7 +47,10 @@ class ContactController extends Controller
                 'contact_id' => $contact->id
             ]);
         }
-        return redirect(url('/'))->with('success', 'Contact Added Successfully!');
+        $msg = count($emails)
+                . ' Contact Added Successfully, Out Of '
+                . count($request->input('emails'));
+        return redirect(url('/'))->with('success', $msg);
     }
 
     public function edit($id)
